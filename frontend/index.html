@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechBridge Brasil — Agente Inteligente de Licitações</title>
+  <meta name="description" content="Plataforma de inteligência e análise de licitações públicas com IA para a TechBridge Brasil.">
+
+  <!-- Tipografia Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              200: '#bae0fd',
+              300: '#7cc5fb',
+              400: '#36a7f7',
+              500: '#0078d4',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          },
+          boxShadow: {
+            'card': '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.03)',
+            'card-hover': '0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.03)',
+            'drawer': '-10px 0 35px -5px rgba(15, 23, 42, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Estilos complementares (animações, scrollbar, estados) -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="h-full bg-slate-50 text-slate-900 font-sans antialiased overflow-hidden selection:bg-sky-100 selection:text-sky-900">
+
+<div id="app" class="h-full flex flex-col">
+
+  <!-- ── Header Enterprise ───────────────────────────────────── -->
+  <header id="header" class="h-14 bg-white border-b border-slate-200/80 px-6 flex items-center justify-between flex-shrink-0 z-30 transition-shadow">
+    <div class="flex items-center gap-3">
+      <a href="/" class="flex items-center gap-2.5 text-decoration-none group" aria-label="TechBridge Brasil — Página inicial">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-600 to-blue-800 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+          <i data-lucide="network" class="w-4 h-4 text-white"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-sm font-semibold text-slate-900 tracking-tight leading-tight">TechBridge Brasil</span>
+          <span class="text-[11px] font-medium text-slate-500 leading-tight">Agente Autônomo de Licitações</span>
+        </div>
+      </a>
+
+      <div class="h-4 w-px bg-slate-200 mx-2 hidden sm:block"></div>
+
+      <!-- Badge de Conexão PNCP -->
+      <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>PNCP Conectado</span>
+      </div>
+    </div>
+
+    <!-- Ações de Exportação -->
+    <div class="flex items-center gap-2">
+      <button
+        id="btn-exportar-csv"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-xs"
+        aria-label="Exportar CSV"
+        disabled
+      >
+        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-slate-500"></i>
+        <span>CSV</span>
+      </button>
+
+      <button
+        id="btn-exportar-pdf"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-xs"
+        aria-label="Exportar Relatório PDF"
+        disabled
+      >
+        <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-500"></i>
+        <span>PDF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Conteúdo Central (Sidebar + Main) ───────────────────── -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- ── Sidebar de Filtros ─────────────────────────────────── -->
+    <aside id="sidebar" class="w-72 md:w-80 flex-shrink-0 bg-white border-r border-slate-200/80 flex flex-col justify-between overflow-y-auto p-5 z-20" aria-label="Filtros de busca">
+
+      <div class="space-y-6">
+        <!-- Título da Seção -->
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-slate-400"></i>
+            Filtros de Busca
+          </span>
+        </div>
+
+        <form id="form-busca" class="space-y-4" novalidate>
+
+          <!-- Campo Palavra-chave -->
+          <div class="space-y-1.5">
+            <label for="campo-palavra-chave" class="text-xs font-medium text-slate-700 block">
+              Palavra-chave ou Objeto
+            </label>
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none"></i>
+              <input
+                type="text"
+                id="campo-palavra-chave"
+                name="palavra_chave"
+                placeholder="Ex: Microsoft 365, Oracle, Nuvem..."
+                autocomplete="off"
+                required
+                class="w-full pl-9 pr-3 py-2 text-sm bg-slate-50/60 border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 outline-none transition-all"
+              >
+            </div>
+          </div>
+
+          <!-- Campos Valor Mínimo e Máximo -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="space-y-1.5">
+              <label for="campo-valor-min" class="text-xs font-medium text-slate-700 block">
+                Valor Mín. (R$)
+              </label>
+              <input
+                type="number"
+                id="campo-valor-min"
+                name="valor_minimo"
+                placeholder="50.000"
+                min="0"
+                class="w-full px-3 py-2 text-sm bg-slate-50/60 border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 outline-none transition-all"
+              >
+            </div>
+
+            <div class="space-y-1.5">
+              <label for="campo-valor-max" class="text-xs font-medium text-slate-700 block">
+                Valor Máx. (R$)
+              </label>
+              <input
+                type="number"
+                id="campo-valor-max"
+                name="valor_maximo"
+                placeholder="5.000.000"
+                min="0"
+                class="w-full px-3 py-2 text-sm bg-slate-50/60 border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 outline-none transition-all"
+              >
+            </div>
+          </div>
+
+          <!-- Slider de Score Mínimo -->
+          <div class="space-y-2 pt-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-medium text-slate-700">Score de Adequação Mínimo</span>
+              <span id="label-slider" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200/60">0</span>
+            </div>
+            <input
+              type="range"
+              id="slider-score"
+              name="score_minimo"
+              min="0"
+              max="100"
+              value="0"
+              step="5"
+              class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600 focus:outline-none"
+            >
+          </div>
+
+          <!-- Botões de Ação da Busca -->
+          <div class="pt-2 flex flex-col gap-2">
+            <button
+              type="submit"
+              id="btn-buscar"
+              class="w-full bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-medium text-sm py-2.5 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors duration-150 disabled:opacity-60 disabled:pointer-events-none"
+            >
+              <i data-lucide="search" class="w-4 h-4"></i>
+              <span>Buscar Oportunidades</span>
+            </button>
+
+            <button
+              type="button"
+              id="btn-limpar"
+              class="w-full bg-white hover:bg-slate-50 active:bg-slate-100 border border-slate-200 text-slate-700 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors"
+            >
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
+              <span>Limpar Filtros</span>
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Histórico de Buscas -->
+        <div class="pt-2 border-t border-slate-100 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="history" class="w-3.5 h-3.5 text-slate-400"></i>
+              Histórico Recente
+            </span>
+            <button
+              id="btn-limpar-historico"
+              type="button"
+              class="text-[11px] font-medium text-slate-400 hover:text-rose-600 transition-colors flex items-center gap-1 cursor-pointer"
+              title="Limpar histórico de buscas"
+            >
+              <i data-lucide="trash-2" class="w-3 h-3"></i>
+              <span>Limpar</span>
+            </button>
+          </div>
+          <ul id="lista-historico" class="space-y-1 text-xs" aria-label="Histórico de buscas">
+
+            <li class="text-slate-400 py-1 italic">Nenhuma busca recente.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Rodapé Sidebar Empresa -->
+      <div class="pt-4 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
+        <span class="flex items-center gap-1.5 font-medium text-slate-500">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-sky-600"></i>
+          TechBridge Hub
+        </span>
+        <span class="font-mono text-[10px] text-slate-400">v1.0.0</span>
+      </div>
+
+    </aside>
+
+    <!-- ── Área Principal (Dashboard Content) ──────────────────── -->
+    <main id="main" class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 bg-slate-50/50" role="main">
+
+      <!-- Message Bar (Notificações) -->
+      <div id="message-bar" role="status" aria-live="polite" class="hidden"></div>
+
+      <!-- Diagrama de Fluxo do Agente Autônomo -->
+      <section id="diagrama-fluxo" class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-card space-y-4" aria-label="Fluxo de execução do agente">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-sky-500"></div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-600">Pipeline de Análise Autônoma</h3>
+          </div>
+          <div id="fluxo-indicador" class="text-xs font-medium text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="activity" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span id="fluxo-mensagem">Aguardando início de busca pelos filtros.</span>
+          </div>
+        </div>
+
+        <div class="fluxo-etapas flex items-center justify-between gap-1 overflow-x-auto py-2" role="list" aria-label="Etapas do processamento">
+
+          <!-- Etapa 1: Busca PNCP -->
+          <div class="fluxo-no flex-1 min-w-[120px] flex flex-col items-center p-3 rounded-xl border border-slate-200 bg-slate-50/40 transition-all duration-300" id="no-1" role="listitem" data-etapa="1">
+            <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 shadow-xs mb-2 fluxo-no-icone-container transition-all">
+              <i data-lucide="globe" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700 tracking-tight">1. Busca PNCP</span>
+            <span class="fluxo-no-status text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Aguardando</span>
+          </div>
+
+          <!-- Conector 1-2 -->
+          <div class="fluxo-seta flex items-center justify-center text-slate-300 px-1" id="seta-1-2" aria-hidden="true">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </div>
+
+          <!-- Etapa 2: Filtragem -->
+          <div class="fluxo-no flex-1 min-w-[120px] flex flex-col items-center p-3 rounded-xl border border-slate-200 bg-slate-50/40 transition-all duration-300" id="no-2" role="listitem" data-etapa="2">
+            <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 shadow-xs mb-2 fluxo-no-icone-container transition-all">
+              <i data-lucide="filter" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700 tracking-tight">2. Filtragem</span>
+            <span class="fluxo-no-status text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Aguardando</span>
+          </div>
+
+          <!-- Conector 2-3 -->
+          <div class="fluxo-seta flex items-center justify-center text-slate-300 px-1" id="seta-2-3" aria-hidden="true">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </div>
+
+          <!-- Etapa 3: Análise IA -->
+          <div class="fluxo-no flex-1 min-w-[120px] flex flex-col items-center p-3 rounded-xl border border-slate-200 bg-slate-50/40 transition-all duration-300" id="no-3" role="listitem" data-etapa="3">
+            <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 shadow-xs mb-2 fluxo-no-icone-container transition-all">
+              <i data-lucide="cpu" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700 tracking-tight">3. Análise IA</span>
+            <span class="fluxo-no-status text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Aguardando</span>
+          </div>
+
+          <!-- Conector 3-4 -->
+          <div class="fluxo-seta flex items-center justify-center text-slate-300 px-1" id="seta-3-4" aria-hidden="true">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </div>
+
+          <!-- Etapa 4: Score & Fit -->
+          <div class="fluxo-no flex-1 min-w-[120px] flex flex-col items-center p-3 rounded-xl border border-slate-200 bg-slate-50/40 transition-all duration-300" id="no-4" role="listitem" data-etapa="4">
+            <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 shadow-xs mb-2 fluxo-no-icone-container transition-all">
+              <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700 tracking-tight">4. Score & Fit</span>
+            <span class="fluxo-no-status text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Aguardando</span>
+          </div>
+
+          <!-- Conector 4-5 -->
+          <div class="fluxo-seta flex items-center justify-center text-slate-300 px-1" id="seta-4-5" aria-hidden="true">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </div>
+
+          <!-- Etapa 5: Resultado -->
+          <div class="fluxo-no flex-1 min-w-[120px] flex flex-col items-center p-3 rounded-xl border border-slate-200 bg-slate-50/40 transition-all duration-300" id="no-5" role="listitem" data-etapa="5">
+            <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 shadow-xs mb-2 fluxo-no-icone-container transition-all">
+              <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700 tracking-tight">5. Resultado</span>
+            <span class="fluxo-no-status text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Aguardando</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Grade de Resultados ───────────────────────────────── -->
+      <section aria-label="Resultados da busca" class="space-y-4">
+        
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <h2 class="text-base font-semibold text-slate-900 tracking-tight">Oportunidades Identificadas</h2>
+            <span id="contador-resultados" class="hidden text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-200/70 text-slate-700" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div id="grade-cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" role="list" aria-label="Lista de licitações analisadas">
+          
+          <!-- Estado Vazio Inicial -->
+          <div id="estado-vazio" class="col-span-full py-16 px-4 text-center flex flex-col items-center justify-center bg-white border border-dashed border-slate-200 rounded-xl shadow-xs">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3 border border-slate-200/80">
+              <i data-lucide="file-search" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-sm font-semibold text-slate-800 mb-1">Nenhuma licitação analisada ainda</h3>
+            <p class="text-xs text-slate-500 max-w-sm leading-relaxed">
+              Use o formulário de busca à esquerda para buscar editais públicos no PNCP e classificá-los com IA de acordo com o portfólio da TechBridge Brasil.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ── Drawer de Análise Completa ──────────────────────────── -->
+<div id="drawer-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 hidden transition-opacity" aria-hidden="true" role="presentation"></div>
+
+<aside
+  id="drawer"
+  class="fixed inset-y-0 right-0 w-full max-w-xl bg-white shadow-drawer z-50 transform translate-x-full transition-transform duration-300 ease-out flex flex-col border-l border-slate-200"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Análise detalhada da licitação"
+  aria-hidden="true"
+>
+  <!-- Drawer Header -->
+  <div class="p-6 border-b border-slate-200/80 flex-shrink-0 space-y-2 bg-slate-50/50">
+    <div class="flex items-start justify-between gap-4">
+      <div class="space-y-1">
+        <span id="drawer-orgao" class="text-xs font-semibold text-sky-700 uppercase tracking-wider block"></span>
+        <h2 id="drawer-titulo" class="text-base font-semibold text-slate-900 leading-snug"></h2>
+      </div>
+      <button
+        id="btn-fechar-drawer"
+        class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-lg transition-colors flex-shrink-0"
+        aria-label="Fechar análise"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div id="drawer-badge-container" class="pt-1"></div>
+  </div>
+
+  <!-- Drawer Body -->
+  <div class="flex-1 overflow-y-auto p-6 space-y-6">
+
+    <!-- Score de Adequação -->
+    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="target" class="w-3.5 h-3.5 text-slate-500"></i>
+          Score de Adequação
+        </span>
+        <span id="drawer-score-numero" class="text-2xl font-bold tracking-tight"></span>
+      </div>
+
+      <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+        <div id="drawer-score-barra" class="h-full rounded-full transition-all duration-500"></div>
+      </div>
+
+      <p id="drawer-justificativa" class="text-xs text-slate-600 leading-relaxed pt-1"></p>
+    </div>
+
+    <!-- Resumo Executivo -->
+    <div class="space-y-2">
+      <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+        <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400"></i>
+        Resumo Executivo
+      </h4>
+      <p id="drawer-resumo" class="text-xs text-slate-700 leading-relaxed bg-white p-3.5 rounded-lg border border-slate-100"></p>
+    </div>
+
+    <!-- Pontos Fortes e Riscos -->
+    <div class="grid grid-cols-1 gap-4">
+      <!-- Pontos Fortes -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-semibold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+          Pontos Fortes (Fit Comercial)
+        </h4>
+        <ul id="drawer-pontos-fortes" class="space-y-1.5 text-xs text-slate-700"></ul>
+      </div>
+
+      <!-- Riscos -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-semibold text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-600"></i>
+          Riscos & Atenção
+        </h4>
+        <ul id="drawer-riscos" class="space-y-1.5 text-xs text-slate-700"></ul>
+      </div>
+    </div>
+
+    <!-- Estratégia de Pitch -->
+    <div class="space-y-2 p-4 rounded-xl bg-sky-50/60 border border-sky-200/60">
+      <h4 class="text-xs font-semibold text-sky-900 uppercase tracking-wider flex items-center gap-1.5">
+        <i data-lucide="zap" class="w-3.5 h-3.5 text-sky-600"></i>
+        Estratégia de Pitch Comercial
+      </h4>
+      <p id="drawer-pitch" class="text-xs text-sky-950 leading-relaxed"></p>
+    </div>
+
+    <!-- Metadados do Edital -->
+    <div class="space-y-2">
+      <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+        <i data-lucide="info" class="w-3.5 h-3.5 text-slate-400"></i>
+        Dados Técnicos do Edital
+      </h4>
+      <div id="drawer-meta" class="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-lg border border-slate-200/80"></div>
+    </div>
+
+  </div>
+
+  <!-- Drawer Footer -->
+  <div class="p-4 border-t border-slate-200/80 flex items-center justify-end gap-3 bg-white flex-shrink-0">
+    <button id="drawer-btn-exportar-pdf" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors">
+      <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-500"></i>
+      <span>Exportar PDF</span>
+    </button>
+    <a id="drawer-link-edital" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium bg-sky-600 hover:bg-sky-700 text-white transition-colors shadow-xs">
+      <span>Abrir Edital no PNCP</span>
+      <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+    </a>
+  </div>
+</aside>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

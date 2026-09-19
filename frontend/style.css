@@ -1,0 +1,198 @@
+/* ============================================================
+   TECHBRIDGE BRASIL — REFINED STYLES & MICRO-INTERACTIONS
+   Tailwind CSS Complementary Styles
+   ============================================================ */
+
+/* ── Tipografia & Suavização ──────────────────────────────── */
+body {
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Scrollbars Elegantes ─────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ── Header State ─────────────────────────────────────────── */
+#header.com-sombra {
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+}
+
+/* ── Pipeline de Execução (Diagrama de Fluxo) ─────────────── */
+.fluxo-no.ativo {
+  border-color: #0284c7 !important;
+  background-color: #f0f9ff !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+.fluxo-no.ativo .fluxo-no-icone-container {
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
+  animation: pulse-icon 1.5s ease-in-out infinite;
+}
+
+.fluxo-no.ativo .fluxo-no-status {
+  color: #0284c7 !important;
+  font-weight: 600;
+}
+
+.fluxo-no.concluido {
+  border-color: #a7f3d0 !important;
+  background-color: #f0fdf4 !important;
+}
+
+.fluxo-no.concluido .fluxo-no-icone-container {
+  border-color: #10b981 !important;
+  color: #059669 !important;
+  background-color: #ecfdf5 !important;
+}
+
+.fluxo-no.concluido .fluxo-no-status {
+  color: #059669 !important;
+  font-weight: 600;
+}
+
+.fluxo-seta.ativa {
+  color: #0284c7 !important;
+}
+
+.fluxo-seta.concluida {
+  color: #10b981 !important;
+}
+
+@keyframes pulse-icon {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/* ── Notificações (Message Bar) ───────────────────────────── */
+#message-bar.sucesso {
+  display: flex !important;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  align-items: center;
+  gap: 0.5rem;
+  animation: entrar-suave 0.2s ease-out;
+}
+
+#message-bar.erro {
+  display: flex !important;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  align-items: center;
+  gap: 0.5rem;
+  animation: entrar-suave 0.2s ease-out;
+}
+
+/* ── Badges & Scores ──────────────────────────────────────── */
+.badge-alta {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-media {
+  background-color: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.badge-baixa {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.score-alta {
+  color: #047857;
+}
+
+.score-media {
+  color: #b45309;
+}
+
+.score-baixa {
+  color: #b91c1c;
+}
+
+.barra-alta {
+  background-color: #10b981;
+}
+
+.barra-media {
+  background-color: #f59e0b;
+}
+
+.barra-baixa {
+  background-color: #ef4444;
+}
+
+/* ── Card de Licitação ────────────────────────────────────── */
+.card-licitacao {
+  animation: entrar-suave 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes entrar-suave {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Drawer & Overlay ─────────────────────────────────────── */
+#drawer-overlay.visivel {
+  display: block !important;
+}
+
+#drawer.visivel {
+  transform: translateX(0) !important;
+}
+
+/* ── Skeleton Shimmer ─────────────────────────────────────── */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

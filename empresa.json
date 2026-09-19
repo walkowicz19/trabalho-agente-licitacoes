@@ -1,0 +1,108 @@
+{
+  "nome": "TechBridge Brasil",
+  "descricao": "Empresa intermediadora de tecnologia que revende e implementa soluções de grandes fabricantes como IBM, Microsoft, Oracle e SAP para o setor público e privado brasileiro.",
+  "cnpj": "12.345.678/0001-90",
+  "segmento": "Tecnologia da Informação",
+  "porte": "Médio",
+  "anos_mercado": 12,
+
+  "fabricantes_parceiros": [
+    "Microsoft",
+    "IBM",
+    "Oracle",
+    "SAP",
+    "Dell",
+    "HPE",
+    "VMware",
+    "Cisco",
+    "Fortinet",
+    "Veeam"
+  ],
+
+  "produtos": [
+    {
+      "categoria": "Licenciamento de Software",
+      "itens": [
+        "Microsoft 365 (antigo Office 365)",
+        "Microsoft Windows Server",
+        "Microsoft SQL Server",
+        "Oracle Database",
+        "Oracle WebLogic",
+        "IBM WebSphere",
+        "IBM Db2",
+        "SAP ERP",
+        "SAP S/4HANA",
+        "SAP HANA"
+      ]
+    },
+    {
+      "categoria": "Infraestrutura e Servidores",
+      "itens": [
+        "IBM Power Systems",
+        "Dell PowerEdge",
+        "HPE ProLiant",
+        "Storage Dell EMC",
+        "Storage HPE",
+        "Switches Cisco Catalyst",
+        "Roteadores Cisco"
+      ]
+    },
+    {
+      "categoria": "Cloud e Virtualização",
+      "itens": [
+        "Microsoft Azure",
+        "IBM Cloud",
+        "VMware vSphere",
+        "VMware NSX",
+        "Microsoft Azure Stack"
+      ]
+    },
+    {
+      "categoria": "Cibersegurança e Compliance",
+      "itens": [
+        "IBM QRadar SIEM",
+        "Microsoft Defender for Endpoint",
+        "Microsoft Defender for Cloud",
+        "Fortinet FortiGate (firewall)",
+        "Veeam Backup & Replication",
+        "Microsoft Azure Backup"
+      ]
+    }
+  ],
+
+  "servicos": [
+    "Suporte técnico especializado (helpdesk nível 1, 2 e 3)",
+    "Serviços gerenciados de TI (MSP)",
+    "Implantação e migração para nuvem",
+    "Licenciamento e renovação de contratos de software",
+    "Consultoria em infraestrutura",
+    "Integração de sistemas e middleware",
+    "Desenvolvimento de integrações via APIs",
+    "Treinamento e capacitação em soluções Microsoft e IBM",
+    "Gestão de ativos de software (SAM)",
+    "Auditoria de licenças de software"
+  ],
+
+  "palavras_chave_busca": [
+    "microsoft", "365", "office", "windows server", "sql server",
+    "oracle", "ibm", "sap", "hana",
+    "software", "licença", "licenciamento", "renovação de licença",
+    "cloud", "nuvem", "azure", "ibm cloud",
+    "servidor", "servidores", "infraestrutura", "datacenter",
+    "suporte técnico", "helpdesk", "service desk", "manutenção de software",
+    "segurança da informação", "cibersegurança", "firewall", "siem",
+    "backup", "recuperação de desastre", "disaster recovery",
+    "virtualização", "vmware", "hyper-v",
+    "middleware", "integração de sistemas", "erp", "crm",
+    "banco de dados", "database",
+    "dell", "hpe", "cisco", "fortinet", "veeam",
+    "storage", "armazenamento",
+    "gestão de ti", "outsourcing de ti", "terceirização de ti",
+    "computação em nuvem", "saas", "iaas", "paas"
+  ],
+
+  "regioes_atuacao": ["Nacional"],
+
+  "porte_minimo_contrato_reais": 50000,
+  "porte_maximo_contrato_reais": 50000000
+}
