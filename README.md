@@ -200,3 +200,8 @@ agente-licitacoes/
 - **KISS & YAGNI:** Código direto, limpo e legível por desenvolvedores juniores, sem complexidade desnecessária.
 - **Resiliência:** Tolerância a falhas na rede governamental (PNCP) e gestão inteligente de cotas gratuitas de IA.
 - **Zero Custo:** Nenhuma biblioteca ou serviço pago é necessário para a execução integral da aplicação.
+
+  ## Observações
+
+  - Nós usamos Antigravity como harness e o modelo Gemini 3.8 Flash no High effort para a criação da solução.
+  - Usamos Claude Opus 5.5 para a criação dos slides da nossa apresentação.
